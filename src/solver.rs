@@ -6,12 +6,12 @@ const SIZE: usize = 9;
 ///
 /// This contains numbers field and functions.
 #[derive(Debug)]
-pub struct Sudoku {
+pub struct Solver {
     pub field: [[Option<u8>; SIZE]; SIZE],
     pub options: [[Vec<u8>; SIZE]; SIZE],
 }
 
-impl Sudoku {
+impl Solver {
     /// Create a new Sudoku instance.
     pub fn new(initial_field: &[[u8; SIZE]; SIZE]) -> Result<Self, SudokuError> {
         let mut field = [[None; SIZE]; SIZE];
@@ -314,7 +314,7 @@ mod tests {
 
     #[test]
     fn test_new() {
-        let sudoku = Sudoku::new(&FIELD_1).unwrap();
+        let sudoku = Solver::new(&FIELD_1).unwrap();
         assert_eq!(sudoku.field[0][0], None);
         assert_eq!(sudoku.field[0][4], Some(6));
         assert_eq!(sudoku.field[3][1], Some(3));
@@ -323,7 +323,7 @@ mod tests {
 
     #[test]
     fn test_determine() {
-        let mut sudoku = Sudoku::new(&FIELD_1).unwrap();
+        let mut sudoku = Solver::new(&FIELD_1).unwrap();
         sudoku.determine(0, 0, 1);
 
         assert_eq!(sudoku.field[0][0], Some(1));
@@ -344,14 +344,14 @@ mod tests {
             [9, 1, 2, 3, 4, 5, 6, 7, 8],
         ];
 
-        let sudoku = Sudoku::new(&field).unwrap();
+        let sudoku = Solver::new(&field).unwrap();
 
         assert!(sudoku.is_solved());
     }
 
     #[test]
     fn test_update_options() {
-        let mut sudoku = Sudoku::new(&FIELD_1).unwrap();
+        let mut sudoku = Solver::new(&FIELD_1).unwrap();
         sudoku.update_options();
 
         assert_eq!(sudoku.options[1][6], vec![1, 3, 6, 7]);
@@ -361,7 +361,7 @@ mod tests {
 
     #[test]
     fn test_apply_row_reduction() {
-        let mut sudoku = Sudoku::new(&FIELD_1).unwrap();
+        let mut sudoku = Solver::new(&FIELD_1).unwrap();
         sudoku.print();
         sudoku.update_options();
         sudoku.apply_row_reduction();
@@ -375,7 +375,7 @@ mod tests {
 
     #[test]
     fn test_apply_column_reduction() {
-        let mut sudoku = Sudoku::new(&FIELD_1).unwrap();
+        let mut sudoku = Solver::new(&FIELD_1).unwrap();
         sudoku.update_options();
         sudoku.apply_row_reduction();
 
@@ -389,7 +389,7 @@ mod tests {
 
     #[test]
     fn test_apply_box_reduction() {
-        let mut sudoku = Sudoku::new(&FIELD_1).unwrap();
+        let mut sudoku = Solver::new(&FIELD_1).unwrap();
         sudoku.update_options();
         sudoku.apply_row_reduction();
 
@@ -406,7 +406,7 @@ mod tests {
 
     #[test]
     fn test_solve() {
-        let mut sudoku = Sudoku::new(&FIELD_1).unwrap();
+        let mut sudoku = Solver::new(&FIELD_1).unwrap();
         sudoku.print();
         sudoku.step().unwrap();
         sudoku.print();
